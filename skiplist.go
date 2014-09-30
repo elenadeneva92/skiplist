@@ -5,10 +5,14 @@ import (
 	"time"
 )
 
+// Value generic interface for a value in the data structure
 type Value interface{}
 
 var defaultValue = struct{}{}
 
+// NewSkipList is default constructor for a skipList
+// height int : the maximum level of the data structure
+// prob float64: the probability a node
 func NewSkipList(height int, prob float64) SkipList {
 	return &genericSkipList{
 		height: height,
@@ -18,6 +22,7 @@ func NewSkipList(height int, prob float64) SkipList {
 	}
 }
 
+// Key interface represents the needed comparison function to use type as a key in the skip llist
 type Key interface {
 	LessEq(Key) bool
 	Eq(Key) bool
@@ -34,6 +39,7 @@ func (n *node) level() int {
 	return len(n.next)
 }
 
+// SkipList interface represents the basic operation in a skip list
 type SkipList interface {
 	Add(Key, Value)
 	Find(Key) (Value, bool)
@@ -49,6 +55,7 @@ type genericSkipList struct {
 	prob   float64
 }
 
+// Iterator over a collection
 type Iterator interface {
 	Next() bool
 	Key() Key
@@ -59,6 +66,8 @@ type skipListIterator struct {
 	current *node
 }
 
+// Next move the iterrator to the next element
+// returns false if it is in the end of the collection
 func (it *skipListIterator) Next() bool {
 	if it.current == nil || it.current.next[0] == nil {
 		return false
@@ -68,10 +77,12 @@ func (it *skipListIterator) Next() bool {
 	return true
 }
 
+// Key returns the key of the current element
 func (it skipListIterator) Key() Key {
 	return it.current.key
 }
 
+// Value returns the value of the current element
 func (it skipListIterator) Value() Value {
 	return it.current.value
 }
@@ -139,9 +150,9 @@ func (sl *genericSkipList) Len() int {
 // returns the deleted value and flag if the deletion was successful
 func (sl *genericSkipList) Delete(key Key) (Value, bool) {
 	var (
-		value   Value = defaultValue
-		ok            = false
-		current       = sl.head
+		value   = defaultValue
+		ok      = false
+		current = sl.head
 	)
 
 	for level := sl.height - 1; level >= 0; level-- {
