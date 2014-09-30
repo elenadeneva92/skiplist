@@ -150,7 +150,7 @@ func (sl *genericSkipList) Len() int {
 // returns the deleted value and flag if the deletion was successful
 func (sl *genericSkipList) Delete(key Key) (Value, bool) {
 	var (
-		value   = defaultValue
+		value   = Value(defaultValue)
 		ok      = false
 		current = sl.head
 	)
